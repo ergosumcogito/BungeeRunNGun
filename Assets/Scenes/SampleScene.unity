@@ -236,17 +236,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  jumpForce: 10
+  jumpForce: 8
   groundCheck: {fileID: 758390653}
   groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  gravityScale: 1
-  fallGravityMultiplier: 2.2
-  maxFallSpeed: 20
+  gravityScale: 1.5
+  fallGravityMultiplier: 2.5
+  maxFallSpeed: 50
   jumpHangTimeThreshold: 0.1
   jumpHangGravityMult: 0.5
+  coyoteTimeDuration: 0.1
+  jumpBufferDuration: 0.1
 --- !u!50 &305267226
 Rigidbody2D:
   serializedVersion: 5
@@ -700,7 +702,7 @@ Transform:
   m_GameObject: {fileID: 847287254}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.4811659, y: -0.52236104, z: 0}
+  m_LocalPosition: {x: 6.94, y: -0.52236104, z: 0}
   m_LocalScale: {x: 22.9993, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
