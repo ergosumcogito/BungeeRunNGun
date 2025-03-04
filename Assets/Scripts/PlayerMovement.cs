@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -11,7 +11,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravityScale = 1.0f;
     [SerializeField] private float fallGravityMultiplier = 2.2f;
     [SerializeField] private float maxFallSpeed = 20f;
-
+    [SerializeField] private float jumpHangTimeThreshold = 1.0f;
+    [SerializeField] private float jumpHangGravityMult = 0.5f;
+    
     private Rigidbody2D rb;
     private PlayerInput playerInput;
     private bool jumpRequested = false;
@@ -48,6 +50,12 @@ public class PlayerMovement : MonoBehaviour
             jumpRequested = false;
         }
 
+        // Decrease gravity in apex for a brief moment
+        if (!IsGrounded() && Math.Abs(rb.linearVelocity.y) < jumpHangTimeThreshold)
+        {
+            rb.gravityScale = rb.gravityScale * jumpHangGravityMult;
+        }
+        
         // if the player if moving downwards
         if (rb.linearVelocity.y < 0)
         {
