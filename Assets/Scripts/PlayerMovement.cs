@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -16,19 +17,15 @@ public class PlayerMovement : MonoBehaviour
     
     [Space(5)]
     
-    [SerializeField] private float coyoteTimeDuration = 0.1f;    // Duration after leaving ground where jump is still allowed
-    [SerializeField] private float jumpBufferDuration = 0.1f;      // Duration to buffer jump input before landing
+    [SerializeField] private float coyoteTimeDuration = 0.2f;    // Duration after leaving ground where jump is still allowed
+    [SerializeField] private float jumpBufferDuration = 0.2f;      // Duration to buffer jump input before landing
 
     
     
     [Space(10)]
     
     [Header("Movement")]
-    [SerializeField] private float moveSpeed = 10f;         // Movement speed
-    [SerializeField] private float velPower = 0.9f;
-    [SerializeField] private float acceleration = 7f;
-    [SerializeField] private float decceleration = 7f;
-    [SerializeField] private float frictionAmount = 0.2f;
+    [SerializeField] private float runMaxSpeed = 10f;         // Movement speed
     
     // Private variables for physics and timers
     private Rigidbody2D rb;
@@ -82,33 +79,27 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        
-        // Horizontal movement
-        
-        // Calculate direction and desired velocity
-        float targetSpeed = playerInput.Horizontal * moveSpeed;
-        // Calculate diff between current velocity and desired velocity
-        float speedDif = targetSpeed - rb.linearVelocityX;
-        // change acceleration rate depending on situation
-        float accelRate = (Mathf.Abs(targetSpeed)> 0.01f) ? acceleration : decceleration;
-        float movement  = Mathf.Pow(Mathf.Abs(speedDif)* accelRate, velPower) * Mathf.Sign(speedDif);
-        
-        // Apply force to rigidbody along X axis
-        rb.AddForce(movement * Vector2.right);
-        
-        
-        // Friction
+        Run();
+        Jump();
+    }
 
-        if (IsGrounded() && Mathf.Abs(playerInput.Horizontal) < 0.01f)
-        {
-            float amount = Mathf.Min(Mathf.Abs(rb.linearVelocityX), Mathf.Abs(frictionAmount));
-            amount *= Mathf.Sign(rb.linearVelocityX);
-            rb.AddForce(-amount * Vector2.right, ForceMode2D.Impulse);
-        }
-        
-        
-        // Jumping mechanic
-        
+    void Run()
+    {
+            float horizontalInput = playerInput.Horizontal;
+
+            if (IsGrounded() && Mathf.Abs(horizontalInput) < 0.01f)
+            {
+                rb.linearVelocity = new Vector2(Mathf.Lerp(rb.linearVelocity.x, 0, 1.0f), rb.linearVelocity.y);
+            }
+            else
+            {
+                float targetSpeed = horizontalInput * runMaxSpeed;
+                rb.linearVelocity = new Vector2(targetSpeed, rb.linearVelocity.y);
+            }
+    }
+
+    void Jump()
+    {
         // Check if jump is allowed: if jump was buffered and player is within coyote time
         if (jumpBufferTimer > 0f && coyoteTimer > 0f)
         {

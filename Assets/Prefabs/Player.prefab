@@ -111,16 +111,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   gravityScale: 1.5
-  fallGravityMultiplier: 2.5
-  maxFallSpeed: 50
-  jumpHangTimeThreshold: 0.1
-  jumpHangGravityMult: 0.5
-  coyoteTimeDuration: 0.1
-  jumpBufferDuration: 0.1
-  moveSpeed: 10
-  velPower: 0.9
-  acceleration: 7
-  decceleration: 7
+  fallGravityMultiplier: 2
+  maxFallSpeed: 20
+  jumpHangTimeThreshold: 0.2
+  jumpHangGravityMult: 0.3
+  coyoteTimeDuration: 0.2
+  jumpBufferDuration: 0.2
+  runMaxSpeed: 10
+  frictionAmount: 0.2
 --- !u!114 &9141874769964222265
 MonoBehaviour:
   m_ObjectHideFlags: 0
