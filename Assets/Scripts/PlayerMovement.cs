@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // Movement and jump parameters
-    [SerializeField] private float moveSpeed = 5f;         // Movement speed
+    [Header("Jump")]
     [SerializeField] private float jumpForce = 10f;          // Jump force
     [SerializeField] private Transform groundCheck;        // Ground check position
     [SerializeField] private float groundCheckRadius = 0.2f; // Ground check radius
@@ -14,17 +13,29 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float maxFallSpeed = 20f;
     [SerializeField] private float jumpHangTimeThreshold = 1.0f;
     [SerializeField] private float jumpHangGravityMult = 0.5f;
-
-    // Timer durations
+    
+    [Space(5)]
+    
     [SerializeField] private float coyoteTimeDuration = 0.1f;    // Duration after leaving ground where jump is still allowed
     [SerializeField] private float jumpBufferDuration = 0.1f;      // Duration to buffer jump input before landing
 
+    
+    
+    [Space(10)]
+    
+    [Header("Movement")]
+    [SerializeField] private float moveSpeed = 10f;         // Movement speed
+    [SerializeField] private float velPower = 0.9f;
+    [SerializeField] private float acceleration = 7f;
+    [SerializeField] private float decceleration = 7f;
+    [SerializeField] private float frictionAmount = 0.2f;
+    
     // Private variables for physics and timers
     private Rigidbody2D rb;
     private PlayerInput playerInput; // Assuming a custom component for horizontal input
     private float coyoteTimer;       // Timer for coyote time
     private float jumpBufferTimer;   // Timer for jump buffer
-
+    
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -71,9 +82,33 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Apply horizontal movement based on input
-        rb.linearVelocity = new Vector2(playerInput.Horizontal * moveSpeed, rb.linearVelocity.y);
+        
+        // Horizontal movement
+        
+        // Calculate direction and desired velocity
+        float targetSpeed = playerInput.Horizontal * moveSpeed;
+        // Calculate diff between current velocity and desired velocity
+        float speedDif = targetSpeed - rb.linearVelocityX;
+        // change acceleration rate depending on situation
+        float accelRate = (Mathf.Abs(targetSpeed)> 0.01f) ? acceleration : decceleration;
+        float movement  = Mathf.Pow(Mathf.Abs(speedDif)* accelRate, velPower) * Mathf.Sign(speedDif);
+        
+        // Apply force to rigidbody along X axis
+        rb.AddForce(movement * Vector2.right);
+        
+        
+        // Friction
 
+        if (IsGrounded() && Mathf.Abs(playerInput.Horizontal) < 0.01f)
+        {
+            float amount = Mathf.Min(Mathf.Abs(rb.linearVelocityX), Mathf.Abs(frictionAmount));
+            amount *= Mathf.Sign(rb.linearVelocityX);
+            rb.AddForce(-amount * Vector2.right, ForceMode2D.Impulse);
+        }
+        
+        
+        // Jumping mechanic
+        
         // Check if jump is allowed: if jump was buffered and player is within coyote time
         if (jumpBufferTimer > 0f && coyoteTimer > 0f)
         {
