@@ -13,6 +13,9 @@ namespace TarodevController
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
         
+        private float momentumDecay = 0.95f; // Decay factor (should be less than 1)
+        private float momentumThreshold = 0.1f; // Threshold to stop momentum
+        
         // Add external momentum for swing effect
         public Vector2 externalMomentum; 
 
@@ -69,13 +72,20 @@ namespace TarodevController
             HandleDirection();
             HandleGravity();
 
-            // Integrate external momentum (swing effect) into the movement
-            _frameVelocity += externalMomentum;
-            // Gradually decay external momentum over time (adjust decayRate as needed)
-            float decayRate = 10f;
-            externalMomentum = Vector2.Lerp(externalMomentum, Vector2.zero, decayRate * Time.fixedDeltaTime);
+            Vector2 baseVelocity = _frameVelocity;
 
-            ApplyMovement();
+            if (externalMomentum != Vector2.zero)
+            {
+                baseVelocity += externalMomentum;
+        
+                externalMomentum *= momentumDecay;
+                if (externalMomentum.magnitude < momentumThreshold)
+                {
+                    externalMomentum = Vector2.zero;
+                }
+            }
+
+            _rb.velocity = baseVelocity;
         }
 
         #region Collisions

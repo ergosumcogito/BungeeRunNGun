@@ -1377,7 +1377,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionRadius: 4
-  momentumSpeed: 5
+  momentumSpeed: 30
   rotationSpeedDegreesPerSecond: 270
   rotateClockwiseKey: 117
   rotateCounterClockwiseKey: 111
