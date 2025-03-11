@@ -12,6 +12,9 @@ namespace TarodevController
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
+        
+        // Add external momentum for swing effect
+        public Vector2 externalMomentum; 
 
         #region Interface
 
@@ -62,11 +65,16 @@ namespace TarodevController
         private void FixedUpdate()
         {
             CheckCollisions();
-
             HandleJump();
             HandleDirection();
             HandleGravity();
-            
+
+            // Integrate external momentum (swing effect) into the movement
+            _frameVelocity += externalMomentum;
+            // Gradually decay external momentum over time (adjust decayRate as needed)
+            float decayRate = 10f;
+            externalMomentum = Vector2.Lerp(externalMomentum, Vector2.zero, decayRate * Time.fixedDeltaTime);
+
             ApplyMovement();
         }
 
