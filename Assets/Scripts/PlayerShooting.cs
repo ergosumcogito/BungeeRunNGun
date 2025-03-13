@@ -26,7 +26,7 @@ public class PlayerShooting : MonoBehaviour
             // Determine the direction based on player's facing direction
             // Using transform.localScale.x of the player, positive means right, negative means left
             float direction = transform.localScale.x > 0 ? 1f : -1f;
-            rb.velocity = new Vector2(direction * projectileSpeed, 0f);
+            rb.linearVelocity = new Vector2(direction * projectileSpeed, 0f);
         }
     }
 }
