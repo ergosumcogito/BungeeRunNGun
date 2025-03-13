@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 9141874769964222265}
   - component: {fileID: 139474126083515805}
   - component: {fileID: 141504414684761483}
+  - component: {fileID: 302762170240690033}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -113,8 +114,8 @@ MonoBehaviour:
   gravityScale: 2
   fallGravityMultiplier: 2.5
   maxFallSpeed: 20
-  jumpHangTimeThreshold: 0.2
-  jumpHangGravityMult: 0.3
+  jumpHangTimeThreshold: 0.1
+  jumpHangGravityMult: 0.5
   coyoteTimeDuration: 0.2
   jumpBufferDuration: 0.2
   runMaxSpeed: 10
@@ -203,6 +204,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &302762170240690033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521868149070797583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab74b08634a26a41a18508732ba6d6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 270
+  swingImpulse: 15
+  maxHorizontalSpeed: 20
 --- !u!1 &1074945576721537283
 GameObject:
   m_ObjectHideFlags: 0
