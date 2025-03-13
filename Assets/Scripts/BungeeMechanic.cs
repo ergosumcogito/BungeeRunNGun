@@ -106,10 +106,10 @@ public class BungeeMechanic : MonoBehaviour
                 tangent.Normalize();
             }
             // Then proceed with setting velocity along tangent
-            float currentTangentSpeed = Vector2.Dot(rb.velocity, tangent);
-            Vector2 nonTangentVelocity = rb.velocity - tangent * currentTangentSpeed;
+            float currentTangentSpeed = Vector2.Dot(rb.linearVelocity, tangent);
+            Vector2 nonTangentVelocity = rb.linearVelocity - tangent * currentTangentSpeed;
             Vector2 newVelocity = nonTangentVelocity + tangent * swingImpulse;
-            rb.velocity = newVelocity;
+            rb.linearVelocity = newVelocity;
         }
     }
 
