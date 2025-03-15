@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 141504414684761483}
   - component: {fileID: 302762170240690033}
   - component: {fileID: 6606193259131558820}
+  - component: {fileID: 7107465649801146275}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -252,7 +253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationSpeed: 270
   swingImpulse: 15
-  maxHorizontalSpeed: 20
+  maxHorizontalSpeed: 25
 --- !u!114 &6606193259131558820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +269,18 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1208271831954277644, guid: 8e06e0cdf77668a45916002c2df96ce1, type: 3}
   firePoint: {fileID: 2034966307161586566}
   projectileSpeed: 20
+--- !u!114 &7107465649801146275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521868149070797583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fda0e5e5e6b4d57458530aae795ffc69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1074945576721537283
 GameObject:
   m_ObjectHideFlags: 0
