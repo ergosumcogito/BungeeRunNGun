@@ -18,8 +18,6 @@ public class PlayerMovement : MonoBehaviour
     
     [SerializeField] private float coyoteTimeDuration = 0.2f;    // Duration after leaving ground where jump is still allowed
     [SerializeField] private float jumpBufferDuration = 0.2f;      // Duration to buffer jump input before landing
-
-    
     
     [Space(10)]
     
@@ -28,10 +26,11 @@ public class PlayerMovement : MonoBehaviour
     
     // Private variables for physics and timers
     private Rigidbody2D rb;
-    private PlayerInput playerInput; // Assuming a custom component for horizontal input
+    private PlayerInput playerInput; // Custom component for horizontal input
     private float coyoteTimer;       // Timer for coyote time
     private float jumpBufferTimer;   // Timer for jump buffer
-    
+    private bool isFacingRight = true; // Facing direction
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -47,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleInput();
         UpdateTimers();
+        HandleFlip();
     }
 
     // Update input logic
@@ -75,26 +75,48 @@ public class PlayerMovement : MonoBehaviour
             coyoteTimer -= Time.deltaTime;
         }
     }
+    
+    // Flip player based on horizontal input
+    private void HandleFlip()
+    {
+        if (playerInput.Horizontal > 0 && !isFacingRight)
+        {
+            Flip();
+        }
+        else if (playerInput.Horizontal < 0 && isFacingRight)
+        {
+            Flip();
+        }
+    }
+    
+    private void Flip()
+    {
+        // Multiply the player's x local scale by -1 to flip the sprite
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1;
+        transform.localScale = localScale;
+        isFacingRight = !isFacingRight;
+    }
 
     void FixedUpdate()
     {
         Run();
         Jump();
     }
-
+    
     void Run()
     {
-            float horizontalInput = playerInput.Horizontal;
+        float horizontalInput = playerInput.Horizontal;
 
-            if (IsGrounded() && Mathf.Abs(horizontalInput) < 0.01f)
-            {
-                rb.linearVelocity = new Vector2(Mathf.Lerp(rb.linearVelocity.x, 0, 1.0f), rb.linearVelocity.y);
-            }
-            else
-            {
-                float targetSpeed = horizontalInput * runMaxSpeed;
-                rb.linearVelocity = new Vector2(targetSpeed, rb.linearVelocity.y);
-            }
+        if (IsGrounded() && Mathf.Abs(horizontalInput) < 0.01f)
+        {
+            rb.linearVelocity = new Vector2(Mathf.Lerp(rb.linearVelocityX, 0, 1.0f), rb.linearVelocityY);
+        }
+        else
+        {
+            float targetSpeed = horizontalInput * runMaxSpeed;
+            rb.linearVelocity = new Vector2(targetSpeed, rb.linearVelocityY);
+        }
     }
 
     void Jump()
@@ -103,22 +125,22 @@ public class PlayerMovement : MonoBehaviour
         if (jumpBufferTimer > 0f && coyoteTimer > 0f)
         {
             // Perform jump by setting vertical velocity
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            rb.linearVelocity = new Vector2(rb.linearVelocityX, jumpForce);
             // Reset timers after jump is performed
             jumpBufferTimer = 0f;
             coyoteTimer = 0f;
         }
 
         // Modify gravity for jump hang effect when ascending slowly
-        if (!IsGrounded() && Math.Abs(rb.linearVelocity.y) < jumpHangTimeThreshold)
+        if (!IsGrounded() && Math.Abs(rb.linearVelocityY) < jumpHangTimeThreshold)
         {
             rb.gravityScale = gravityScale * jumpHangGravityMult;
         }
         // Apply increased gravity while falling
-        else if (rb.linearVelocity.y < 0)
+        else if (rb.linearVelocityY < 0)
         {
             rb.gravityScale = gravityScale * fallGravityMultiplier;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Max(rb.linearVelocity.y, -maxFallSpeed));
+            rb.linearVelocity = new Vector2(rb.linearVelocityX, Mathf.Max(rb.linearVelocityY, -maxFallSpeed));
         }
         else
         {
